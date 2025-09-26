@@ -1,14 +1,42 @@
 class Solution {
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
-        int n=nums.size();
-        int first=-1,last=-1;
-        for(int i=0;i<n;i++){
-            if(nums[i]==target){
-                if(first==-1) first=i;
-                last=i;
-            }  
+        vector<int> ans(2, -1);
+        int n = nums.size();
+        if(n == 0) return ans;
+
+        // Find first occurrence
+        int start = 0, end = n - 1;
+        while(start <= end){
+            int mid = start + (end - start) / 2;
+            if(nums[mid] == target){
+                ans[0] = mid;       // store potential first
+                end = mid - 1;      // move left to find earlier
+            }
+            else if(nums[mid] < target){
+                start = mid + 1;
+            }
+            else{
+                end = mid - 1;
+            }
         }
-        return {first,last};
+
+        // Find last occurrence
+        start = 0, end = n - 1;
+        while(start <= end){
+            int mid = start + (end - start) / 2;
+            if(nums[mid] == target){
+                ans[1] = mid;       // store potential last
+                start = mid + 1;    // move right to find later
+            }
+            else if(nums[mid] < target){
+                start = mid + 1;
+            }
+            else{
+                end = mid - 1;
+            }
+        }
+
+        return ans;
     }
 };
