@@ -1,33 +1,31 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        unordered_map<char,int> freq;
+        vector<int> freq(26,0);
         for(char ch : tasks){
-            freq[ch]++;
+            freq[ch-'A']++;
         }
-        priority_queue<pair<int,char>> maxHeap;
-        for(auto& p:freq){
-            maxHeap.push({p.second,p.first});
+        priority_queue<int> maxHeap;
+        for(int f : freq){
+            if(f>0) maxHeap.push(f);
         }
-        using Node=tuple<int,int,char>;
-        priority_queue<Node,vector<Node>,greater<Node>> minHeap;
+        queue<pair<int,int>> cooldown;
         int time=0;
-        while(!maxHeap.empty() || !minHeap.empty()){
+        while(!maxHeap.empty() || !cooldown.empty()){
             time++;
             if(!maxHeap.empty()){
-            auto[count,ch]=maxHeap.top();
-            maxHeap.pop();
-            count--;
-            if(count>0){
-                minHeap.push({time+n,count,ch});
+                int cnt=maxHeap.top();
+                maxHeap.pop();
+                cnt--;
+                if(cnt>0)
+                cooldown.push({cnt,time+n});
+            }
+            if(!cooldown.empty() && cooldown.front().second<=time){
+                maxHeap.push(cooldown.front().first);
+                cooldown.pop();
             }
         }
-        while(!minHeap.empty() && get<0>(minHeap.top())==time){
-            auto[readyTime,count,ch]=minHeap.top();
-            minHeap.pop();
-            maxHeap.push({count,ch});
-        }
-        }
         return time;
+        
     }
 };
