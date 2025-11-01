@@ -1,18 +1,18 @@
 class Solution {
 public:
     vector<int> majorityElement(vector<int>& nums) {
-        vector<int> res;
-        map<int,int> frequencyMap;
-        for(int num:nums){
-            frequencyMap[num]++;
+        vector<int> ans;
+        int n=nums.size();
+        unordered_map<int,int> mp;
+        for(int i : nums){
+            mp[i]++;
         }
-        for(const auto &pair:frequencyMap){
-            if(pair.second>(nums.size()/3)){
-              int  majorityElement=pair.first;
-                res.push_back(majorityElement);
-            }
+    for(auto& i : mp){
+        if(i.second>n/3){
+            ans.push_back(i.first);
         }
-        return res;
+    }
+    return ans;
         
     }
 };
